@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Infinity QMult Medic Build</title>
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{--content-bg:rgba(12,10,4,0.95);--content-border:rgba(255,180,0,0.1);--text-primary:#f0ece4;--text-secondary:#b0a890;--accent:#ffb400;--accent-light:#ffd052;--accent-secondary:#5da5ff;--card-bg:rgba(255,255,255,0.03);--good:#52c41a;--bad:#ff6b6b}
+body{font-family:-apple-system,BlinkMacSystemFont,'SF Pro Display','Segoe UI',sans-serif;background:linear-gradient(135deg,#0a0a0a 0%,#1a1408 30%,#14100a 60%,#0a0a0a 100%);color:var(--text-primary);line-height:1.6;min-height:100vh;padding:0}
+a{color:var(--accent);text-decoration:none}a:hover{color:var(--accent-light)}
+h1{font-size:clamp(24px,5vw,32px);background:linear-gradient(135deg,var(--accent-light) 0%,var(--accent) 50%,#f0ece4 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+h2{font-size:20px;color:var(--accent);margin-top:28px;margin-bottom:12px;padding-bottom:6px;border-bottom:1px solid var(--content-border)}
+h3{font-size:16px;color:var(--text-primary);margin-top:20px;margin-bottom:8px}
+p{margin-bottom:12px}ul,ol{margin-bottom:12px;padding-left:20px}li{margin-bottom:4px}
+strong{color:var(--accent-light)}
+.container{max-width:960px;margin:0 auto;padding:24px 16px 48px}
+.breadcrumbs{font-size:12px;color:var(--text-secondary);margin-bottom:20px}
+.breadcrumbs a{color:var(--accent-secondary)}a:hover{color:var(--accent-light)}
+.header{padding:24px 0;border-bottom:1px solid var(--content-border);margin-bottom:24px}
+.header__icon{font-size:32px;margin-bottom:6px}.header__date{font-size:12px;color:rgba(255,255,255,0.3);margin-top:4px}
+.header__tags{display:flex;gap:6px;margin-top:10px;flex-wrap:wrap}
+.header__tag{font-size:11px;padding:2px 10px;border-radius:6px;background:rgba(255,180,0,0.08);color:var(--accent);border:1px solid rgba(255,180,0,0.12)}
+.card{background:var(--card-bg);border:1px solid var(--content-border);border-radius:12px;padding:16px;margin-bottom:14px}
+.card__title{font-size:15px;font-weight:700;margin-bottom:6px;color:var(--text-primary)}
+.card__desc{font-size:13px;color:var(--text-secondary)}
+.card-list{display:flex;flex-direction:column;gap:8px}
+.card-item{display:flex;justify-content:space-between;align-items:flex-start;padding:8px 12px;background:rgba(255,255,255,0.02);border-radius:8px;border-left:3px solid var(--accent)}
+.card-item:hover{background:rgba(255,255,255,0.04)}
+.card-item__left{flex:1}.card-item__name{font-weight:600;font-size:13px;margin-bottom:2px}.card-item__detail{font-size:12px;color:var(--text-secondary)}
+.card-item__right{text-align:right;min-width:80px}.card-item__stat{font-size:12px;font-weight:700}.card-item__sub{font-size:11px;color:var(--text-secondary)}
+.badge{display:inline-flex;align-items:center;gap:4px;padding:2px 10px;border-radius:20px;font-size:11px;font-weight:600;border:1px solid rgba(255,255,255,0.1)}
+.badge--common{background:rgba(160,160,160,0.08);color:#a0a0a0;border-color:rgba(160,160,160,0.15)}
+.badge--uncommon{background:rgba(82,196,26,0.08);color:#52c41a;border-color:rgba(82,196,26,0.15)}
+.badge--rare{background:rgba(93,165,255,0.08);color:#5da5ff;border-color:rgba(93,165,255,0.15)}
+.badge--impossible{background:rgba(187,134,252,0.08);color:#bb86fc;border-color:rgba(187,134,252,0.15)}
+.tip-box{background:rgba(93,165,255,0.06);border:1px solid rgba(93,165,255,0.12);border-radius:8px;padding:10px 14px;margin:14px 0;font-size:13px}.tip-box__label{font-weight:700;color:var(--accent-secondary);margin-bottom:2px}
+.warning-box{background:rgba(255,107,107,0.06);border:1px solid rgba(255,107,107,0.12);border-radius:8px;padding:10px 14px;margin:14px 0;font-size:13px}.warning-box__label{font-weight:700;color:var(--bad);margin-bottom:2px}
+.good-box{background:rgba(82,196,26,0.06);border:1px solid rgba(82,196,26,0.12);border-radius:8px;padding:10px 14px;margin:14px 0;font-size:13px}.good-box__label{font-weight:700;color:var(--good);margin-bottom:2px}
+.stat-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:10px;margin-bottom:16px}
+.stat-pill{background:rgba(255,255,255,0.02);border:1px solid var(--content-border);border-radius:8px;padding:10px;text-align:center}
+.stat-pill__value{font-size:18px;font-weight:700;color:var(--accent)}.stat-pill__label{font-size:11px;color:var(--text-secondary);margin-top:2px}
+.build-header{display:flex;gap:16px;align-items:flex-start;margin-bottom:16px}
+.build-header__icon{font-size:48px}.build-header__info{flex:1}
+.build-header__title{font-size:20px;font-weight:700;margin-bottom:4px}
+.build-header__subtitle{color:var(--text-secondary);font-size:13px}
+.footer{text-align:center;font-size:11px;color:var(--text-secondary);padding:20px;border-top:1px solid var(--content-border);max-width:960px;margin:0 auto}
+@media(max-width:600px){.container{padding:16px 12px 32px}.stat-grid{grid-template-columns:repeat(2,1fr)}}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="breadcrumbs"><a href="index.html">Q-UP Guides</a> / Medic Build</div>
+<div class="header">
+<div class="header__icon">🏗️</div>
+<h1>Infinity QMult Medic Build</h1>
+<div class="header__date">Updated 2026-06-06</div>
+<div class="header__tags"><span class="header__tag">medic</span><span class="header__tag">infinity</span><span class="header__tag">qmult</span><span class="header__tag">endgame</span></div>
+</div>
+
+<div class="build-header">
+<div class="build-header__icon">⚕️</div>
+<div class="build-header__info">
+<div class="build-header__title">Infinity QMult Medic — "Ride of the Valkyrie"</div>
+<div class="build-header__subtitle">Achieves ∞ QMult every flip. Win or lose — doesn't matter.</div>
+</div>
+</div>
+
+<div class="good-box">
+<div class="good-box__label">✅ Why This Build Works</div>
+Medic's skill tree contains <strong>QMult-scaling</strong> nodes activating independently of wins/losses. By triggering <strong>100% of Medic nodes</strong>, all QMult passives fire simultaneously, producing effectively infinite score growth.
+</div>
+
+<h2>Core Concept</h2>
+<p>Traditional builds rely on <em>winning</em>. The Infinity Medic build bypasses that. Score growth is decoupled from the 50/50 outcome and instead driven by QMult passives per flip.</p>
+
+<h2>Build Requirements</h2>
+<div class="card-list">
+<div class="card-item"><div class="card-item__left"><div class="card-item__name">Hero: Medic</div><div class="card-item__detail">Requires unlock. Medic is a dedicated QMult archetype.</div></div></div>
+<div class="card-item"><div class="card-item__left"><div class="card-item__name">Full Skill Tree</div><div class="card-item__detail">All Medic nodes purchased. Takes many runs.</div></div></div>
+<div class="card-item"><div class="card-item__left"><div class="card-item__name">Optimal Placement</div><div class="card-item__detail">Nodes must be arranged to trigger geometrically. Adjacent QMult nodes amplify each other.</div></div></div>
+<div class="card-item"><div class="card-item__left"><div class="card-item__name">Shard Capacity</div><div class="card-item__detail">Enough slots to hold QMult-augmenting shards without blocking triggers.</div></div></div>
+</div>
+
+<h2>Skill Priority</h2>
+<ol>
+<li><strong>QMult per-flip passives</strong> — Always-on. The engine.</li>
+<li><strong>Node trigger coverage</strong> — Each % directly increases base score.</li>
+<li><strong>Shard efficiency</strong> — Nodes increasing max shard slots.</li>
+<li><strong>Post-loss recovery</strong> — Losing still counts for node triggers.</li>
+</ol>
+
+<h2>Community Sources</h2>
+<div class="card-list">
+<div class="card-item"><div class="card-item__left"><div class="card-item__name">"Ride of the Valkyrie" — NinSonNar13</div><div class="card-item__detail">Steam Community Guide (Gameplay Basics). Documented the Infinity Medic build.</div></div></div>
+<div class="card-item"><div class="card-item__left"><div class="card-item__name">"Naked Iron Medic"</div><div class="card-item__detail">Community guide. Stripped-down variant with minimal item dependency.</div></div></div>
+</div>
+
+<div class="warning-box">
+<div class="warning-box__label">⚠️ Reality Check</div>
+<ul>
+<li>Requires <em>fully unlocked</em> Medic tree. Many hours of progression.</li>
+<li>Geometric placement matters. Mispositioned nodes break the chain.</li>
+<li>Impossible-tier items that boost Medic passives are rare.</li>
+<li>This build is <strong>endgame only</strong>. Don't try as a beginner.</li>
+</ul>
+</div>
+
+</div>
+<div class="footer"><a href="index.html">← Back to Q-UP Guides</a></div>
+</body>
+</html>
